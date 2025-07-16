@@ -4,13 +4,16 @@ import com.example.fstest.entity.Product
 import com.example.fstest.entity.ProductCreateRequest
 import com.example.fstest.repository.ProductRepository
 import com.example.fstest.service.ProductServiceInterface
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 open class ProductServiceImpl(private val productRepo: ProductRepository) : ProductServiceInterface {
-    override fun listAll(): List<Product?> {
-        return productRepo.findAll()
+    override fun listAll(page: Int, size: Int): Page<Product> {
+        val pageRequest = PageRequest.of(page, size)
+        return productRepo.findAll(pageRequest)
     }
 
     @Transactional
@@ -20,7 +23,7 @@ open class ProductServiceImpl(private val productRepo: ProductRepository) : Prod
         p.price = createRequest.price
         p.vendor = createRequest.vendor
         p.handle = createRequest.handle
-        p.body_html = createRequest.body_html
+        p.body_html = createRequest.bodyHtml
         p.variants = createRequest.variants
         return productRepo.save(p)
     }

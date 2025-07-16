@@ -1,0 +1,22 @@
+<th:block th:fragment="tableBody(products)">
+    <tr th:each="p : ${products}">
+        <td th:text="${p.title}">Title</td>
+        <td th:text="${p.price}">Price</td>
+        <td th:text="${p.vendor}">Vendor</td>
+        <td th:text="${p.handle}">Handle</td>
+        <td th:utext="${p.body_html}">Body HTML</td>
+        <td>
+            <ul>
+                <li th:each="v : ${p.variants}"
+                    th:text="${v.title + ' ' + v.option1 + ' ' + v.option2}">
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6" style="font-weight:600;">
+            Page <span th:text="${(currentPage ?: 0) + 1}">1</span>
+            of <span th:text="${totalPages ?: 0}">1</span>
+        </td>
+    </tr>
+</th:block>
