@@ -10,4 +10,6 @@ interface ProductServiceInterface {
     fun listAll(page: Int, size: Int): org.springframework.data.domain.Page<Product>
 
     fun saveAll(products: List<Product?>): List<Product>
+
+    fun delete(id: java.util.UUID)
 }

@@ -58,4 +58,9 @@ class ProductController(private val productService: ProductServiceInterface) {
         return "fragments/products-table :: tableBody"
     }
 
+    @DeleteMapping("/api/products/{id}")
+    @ResponseBody
+    fun deleteProduct(@PathVariable id: java.util.UUID) {
+        productService.delete(id)
+    }
 }

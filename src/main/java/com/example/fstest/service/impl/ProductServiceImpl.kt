@@ -7,6 +7,7 @@ import com.example.fstest.service.ProductServiceInterface
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.util.UUID
 import org.springframework.transaction.annotation.Transactional
 
 @Service
@@ -33,4 +34,10 @@ open class ProductServiceImpl(private val productRepo: ProductRepository) : Prod
         val saved: List<Product?> = productRepo.saveAll(products)
         return saved.filterNotNull().take(50)
     }
+
+    @Transactional
+    override fun delete(id: UUID) {
+        productRepo.deleteById(id)
+    }
+
 }
