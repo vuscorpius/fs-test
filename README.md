@@ -19,3 +19,10 @@ Main features:
 Make sure Docker is installed, then start the database:
 ```bash
 docker-compose up -d
+```
+
+You can run from your IDE or using Gradle:
+
+./gradlew bootRun
+
+Then open the UI page (for example http://localhost:8080) in a browser.
