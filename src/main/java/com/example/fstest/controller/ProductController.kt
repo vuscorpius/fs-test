@@ -16,7 +16,6 @@ class ProductController(private val productService: ProductServiceInterface) {
 
     @PostMapping("/api/products")
     @ResponseBody
-    @Throws(JsonProcessingException::class)
     fun apiCreate(@RequestBody request: ProductCreateRequest): Product? {
         return productService.create(request)
     }

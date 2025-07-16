@@ -4,19 +4,16 @@ import com.example.fstest.entity.Product
 import com.example.fstest.entity.ProductCreateRequest
 import com.example.fstest.repository.ProductRepository
 import com.example.fstest.service.ProductServiceInterface
-import com.fasterxml.jackson.core.JsonProcessingException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.math.min
 
 @Service
-class ProductServiceImpl(private val productRepo: ProductRepository) : ProductServiceInterface {
+open class ProductServiceImpl(private val productRepo: ProductRepository) : ProductServiceInterface {
     override fun listAll(): List<Product?> {
         return productRepo.findAll()
     }
 
     @Transactional
-    @Throws(JsonProcessingException::class)
     override fun create(createRequest: ProductCreateRequest): Product {
         val p = Product()
         p.title = createRequest.title
@@ -30,7 +27,7 @@ class ProductServiceImpl(private val productRepo: ProductRepository) : ProductSe
 
     @Transactional
     override fun saveAll(products: List<Product?>): List<Product> {
-        productRepo.deleteAllInBatch()
-        return productRepo.saveAll(products).subList(0, min(50.0, products.size.toDouble()).toInt())
+        val saved: List<Product?> = productRepo.saveAll(products)
+        return saved.filterNotNull().take(50)
     }
 }

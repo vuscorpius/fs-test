@@ -28,8 +28,8 @@ class ProductSchedule(private val productService: ProductServiceInterface,
     fun fetch() {
         val url = "https://famme.no/products.json"
 
-        val mapType: ParameterizedTypeReference<Map<String, Any>> =
-                object : ParameterizedTypeReference<Map<String?, Any?>?>() {}
+        val mapType: ParameterizedTypeReference<Map<String?, Any?>> =
+                object : ParameterizedTypeReference<Map<String?, Any?>>() {}
 
         val resp = restTemplate.exchange(
                 url,

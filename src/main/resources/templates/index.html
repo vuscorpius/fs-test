@@ -5,38 +5,108 @@
     <title>Product Manager</title>
     <script src="https://unpkg.com/htmx.org@1.9.5"></script>
 
-    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/styles/webawesome.css" />
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/styles/webawesome.css"/>
     <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/webawesome.loader.js"></script>
 
     <style>
         body {
             padding: 2rem;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(to bottom right, #f0f4ff, #f7fcff);
+            color: #333;
         }
+
+        header h1 {
+            color: #3366cc;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #666;
+        }
+
         .section {
             margin-bottom: 2rem;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             padding: 0.75rem;
             text-align: left;
         }
+
         th {
-            background-color: #f4f4f4;
+            background-color: #f1f1f1;
+            color: #444;
+            font-weight: 600;
         }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
         .hidden {
             display: none;
         }
+
         wa-input, wa-textarea {
             display: block;
             margin-bottom: 1rem;
         }
+
+        wa-button[variant="primary"] {
+            --wa-button-bg: #3366cc;
+            --wa-button-color: #fff;
+            --wa-button-hover-bg: #285bb5;
+        }
+
+        wa-button[variant="success"] {
+            --wa-button-bg: #28a745;
+            --wa-button-color: #fff;
+            --wa-button-hover-bg: #218838;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination {
+            margin-top: 1rem;
+            display: none;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .pagination button {
+            background: #3366cc;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .pagination button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
     </style>
+
 </head>
 
 <body>
@@ -79,35 +149,56 @@
 </div>
 
 <script>
-    document.getElementById('loadBtn').addEventListener('click', async () => {
-        const res = await fetch('/api/products');
-        const data = await res.json();
+    let allProducts = [];
+    let currentPage = 1;
+    const pageSize = 10;
+
+    function renderTable() {
         const tbody = document.getElementById('productsBody');
         tbody.innerHTML = '';
-        data.forEach(p => {
+
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageData = allProducts.slice(start, end);
+
+        pageData.forEach(p => {
             let bodyHtmlContent = p.body_html || '';
             bodyHtmlContent = bodyHtmlContent.replace(/\\n/g, '').replace(/\n/g, '<br>').trim();
+
             let variantsContent = '';
             if (p.variants && Array.isArray(p.variants)) {
                 variantsContent = '<ul>' + p.variants.map(v =>
                     `<li>${v.title || ''} ${v.option1 || ''} ${v.option2 || ''}</li>`
                 ).join('') + '</ul>';
             }
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
-          <td>${p.title}</td>
-          <td>${p.price}</td>
-          <td>${p.vendor || ''}</td>
-          <td>${p.handle || ''}</td>
-          <td>${bodyHtmlContent}</td>
-          <td>${variantsContent}</td>
-        `;
+                <td>${p.title}</td>
+                <td>${p.price}</td>
+                <td>${p.vendor || ''}</td>
+                <td>${p.handle || ''}</td>
+                <td>${bodyHtmlContent}</td>
+                <td>${variantsContent}</td>
+            `;
             tbody.appendChild(tr);
         });
+
         document.getElementById('productsTable').classList.remove('hidden');
+
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = end >= allProducts.length;
+    }
+
+    document.getElementById('loadBtn').addEventListener('click', async () => {
+        const res = await fetch('/api/products');
+        allProducts = await res.json();
+        currentPage = 1;
+        renderTable();
+
+        document.querySelector('.pagination').style.display = 'flex';
     });
 
-    // Add new product
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -121,7 +212,33 @@
         document.getElementById('loadBtn').click();
         e.target.reset();
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.createElement('div');
+        container.className = 'pagination';
+        container.style.display = 'none'; // 🔥 ban đầu ẩn
+        container.innerHTML = `
+            <button id="prevPage">Prev</button>
+            <button id="nextPage">Next</button>
+        `;
+        document.getElementById('table-container').appendChild(container);
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if ((currentPage * pageSize) < allProducts.length) {
+                currentPage++;
+                renderTable();
+            }
+        });
+    });
 </script>
+
 
 </body>
 </html>
