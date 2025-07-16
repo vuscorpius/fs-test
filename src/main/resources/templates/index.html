@@ -1,24 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Product Manager</title>
     <script src="https://unpkg.com/htmx.org@1.9.5"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/webawesome.loader.js"></script>
+
+    <style>
+        body {
+            padding: 2rem;
+            font-family: sans-serif;
+        }
+        .section {
+            margin-bottom: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .hidden {
+            display: none;
+        }
+        wa-input, wa-textarea {
+            display: block;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
-<body class="p-4">
-<!-- Header -->
-<header class="mb-4">
+
+<body>
+
+<header class="section">
     <h1>Product Manager</h1>
     <p>Manage your products seamlessly with HTMX and Spring Boot.</p>
 </header>
 
-<!-- Button to load products -->
-<button class="btn btn-primary mb-3" id="loadBtn">Load Products</button>
+<div class="section">
+    <wa-button id="loadBtn" variant="primary">Load Products</wa-button>
+</div>
 
-<!-- Table container -->
-<div id="table-container">
-    <table class="table table-striped d-none" id="productsTable">
+<div class="section" id="table-container">
+    <table class="hidden" id="productsTable">
         <thead>
         <tr>
             <th>Title</th>
@@ -31,31 +64,21 @@
         </thead>
         <tbody id="productsBody"></tbody>
     </table>
+</div>
 
-    <!-- Form to add new products -->
-    <form class="mt-4" id="addProductForm">
-        <h3>Add New Product</h3>
-        <div class="mb-2">
-            <input name="title" class="form-control" placeholder="Title" required>
-        </div>
-        <div class="mb-2">
-            <input name="price" type="number" step="0.01" class="form-control" placeholder="Price" required>
-        </div>
-        <div class="mb-2">
-            <input name="vendor" class="form-control" placeholder="Vendor">
-        </div>
-        <div class="mb-2">
-            <input name="handle" class="form-control" placeholder="Handle">
-        </div>
-        <div class="mb-2">
-            <textarea name="body_html" class="form-control" placeholder="Body Html (optional)"></textarea>
-        </div>
-        <button type="submit" class="btn btn-success">Add Product</button>
+<div class="section">
+    <h3>Add New Product</h3>
+    <form id="addProductForm">
+        <wa-input name="title" label="Title" required></wa-input>
+        <wa-input name="price" label="Price" type="number" step="0.01" required></wa-input>
+        <wa-input name="vendor" label="Vendor"></wa-input>
+        <wa-input name="handle" label="Handle"></wa-input>
+        <wa-textarea name="body_html" label="Body HTML (optional)" rows="3"></wa-textarea>
+        <wa-button type="submit" variant="success">Add Product</wa-button>
     </form>
 </div>
 
 <script>
-    // Load products button click
     document.getElementById('loadBtn').addEventListener('click', async () => {
         const res = await fetch('/api/products');
         const data = await res.json();
@@ -66,16 +89,25 @@
             bodyHtmlContent = bodyHtmlContent.replace(/\\n/g, '').replace(/\n/g, '<br>').trim();
             let variantsContent = '';
             if (p.variants && Array.isArray(p.variants)) {
-                variantsContent = '<ul>' + p.variants.map(v => `<li>${v.title || ''} ${v.option1 || ''} ${v.option2 || ''}</li>`).join('') + '</ul>';
+                variantsContent = '<ul>' + p.variants.map(v =>
+                    `<li>${v.title || ''} ${v.option1 || ''} ${v.option2 || ''}</li>`
+                ).join('') + '</ul>';
             }
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${p.title}</td><td>${p.price}</td><td>${p.vendor || ''}</td><td>${p.handle || ''}</td><td>${bodyHtmlContent}</td><td>${variantsContent}</td>`;
+            tr.innerHTML = `
+          <td>${p.title}</td>
+          <td>${p.price}</td>
+          <td>${p.vendor || ''}</td>
+          <td>${p.handle || ''}</td>
+          <td>${bodyHtmlContent}</td>
+          <td>${variantsContent}</td>
+        `;
             tbody.appendChild(tr);
         });
-        document.getElementById('productsTable').classList.remove('d-none');
+        document.getElementById('productsTable').classList.remove('hidden');
     });
 
-    // Add new product form submit
+    // Add new product
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -90,5 +122,6 @@
         e.target.reset();
     });
 </script>
+
 </body>
 </html>
