@@ -7,60 +7,109 @@
     <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/styles/webawesome.css" />
     <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/webawesome.loader.js"></script>
     <style>
+        :root {
+            --font-family-sans: 'Segoe UI', Tahoma, sans-serif;
+            --font-size-xl: 2rem;
+            --font-size-lg: 1.5rem;
+            --font-size-md: 1rem;
+            --font-size-sm: 0.875rem;
+
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+
+            --border-radius-md: 8px;
+            --border-width-sm: 1px;
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
         body {
-            padding: 2rem;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: var(--spacing-lg);
+            font-family: var(--font-family-sans);
+            font-size: var(--font-size-md);
             background: var(--wa-color-neutral-95);
             color: var(--wa-color-neutral-50);
         }
+
         header h1 {
             color: var(--wa-color-brand-50);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-xs);
         }
-        header p { color: var(--wa-color-neutral-50); }
-        .section { margin-bottom: 2rem; }
+
+        header p {
+            color: var(--wa-color-neutral-50);
+            font-size: var(--font-size-md);
+        }
+
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
+            margin-top: var(--spacing-sm);
             background-color: var(--wa-color-neutral-90);
-            border-radius: 8px;
+            border-radius: var(--border-radius-md);
             overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
         }
+
         th, td {
-            border: 1px solid var(--wa-color-neutral-80);
-            padding: 0.75rem;
+            border: var(--border-width-sm) solid var(--wa-color-neutral-80);
+            padding: var(--spacing-sm);
             text-align: left;
+            font-size: var(--font-size-md);
         }
+
         th {
             background-color: var(--wa-color-neutral-80);
             color: var(--wa-color-neutral-10);
             font-weight: 600;
         }
-        tr:hover { background-color: var(--wa-color-neutral-85); }
+
+        tr:hover {
+            background-color: var(--wa-color-neutral-85);
+        }
+
         form {
             background-color: var(--wa-color-neutral-90);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
         }
-        wa-input, wa-textarea { display: block; margin-bottom: 1rem; }
+
+        wa-input, wa-textarea {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+        }
+
         wa-button[variant="primary"] {
             --wa-button-bg: var(--wa-color-brand-50);
             --wa-button-color: var(--wa-color-neutral-0);
             --wa-button-hover-bg: var(--wa-color-brand-60);
         }
+
         wa-button[variant="success"] {
             --wa-button-bg: var(--wa-color-success-50);
             --wa-button-color: var(--wa-color-neutral-0);
             --wa-button-hover-bg: var(--wa-color-success-60);
         }
+
+        wa-button[variant="danger"] {
+            --wa-button-bg: var(--wa-color-danger-50);
+            --wa-button-color: var(--wa-color-neutral-0);
+            --wa-button-hover-bg: var(--wa-color-danger-60);
+        }
+
         .pagination {
-            margin-top: 1rem;
+            margin-top: var(--spacing-sm);
             display: none;
-            gap: 1rem;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-md);
         }
     </style>
 </head>
@@ -92,11 +141,11 @@
             <th>Handle</th>
             <th>Body HTML</th>
             <th>Variants</th>
-            <th>DELETE</th>
+            <th>Delete</th>
         </tr>
         </thead>
-
         <tbody id="productsBody">
+        <!-- populated dynamically by HTMX -->
         </tbody>
     </table>
 </div>

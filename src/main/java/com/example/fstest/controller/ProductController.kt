@@ -7,6 +7,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.math.BigDecimal
+import java.util.UUID
 
 @Controller
 class ProductController(private val productService: ProductServiceInterface) {
@@ -21,6 +22,13 @@ class ProductController(private val productService: ProductServiceInterface) {
         model.addAttribute("currentPage", page)
         model.addAttribute("totalPages", productPage.totalPages)
         return "index"
+    }
+
+    @GetMapping("/products/{id}")
+    fun detail(@PathVariable id: UUID, model: Model): String {
+        val product = productService.findById(id)
+        model.addAttribute("product", product)
+        return "product-detail"
     }
 
     @PostMapping("/products")

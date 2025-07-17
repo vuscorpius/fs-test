@@ -40,4 +40,8 @@ open class ProductServiceImpl(private val productRepo: ProductRepository) : Prod
         productRepo.deleteById(id)
     }
 
+    override fun findById(id: UUID): Product? {
+        return productRepo.findById(id).orElse(null)
+    }
+
 }

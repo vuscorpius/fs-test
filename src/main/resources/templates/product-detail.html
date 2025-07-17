@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail</title>
+    <link rel="stylesheet"
+          href="https://early.webawesome.com/webawesome@3.0.0-beta.2/dist/styles/webawesome.css" />
+    <style>
+        :root {
+            --font-family-sans: 'Segoe UI', Tahoma, sans-serif;
+            --font-size-xl: 2rem;
+            --font-size-lg: 1.25rem;
+            --font-size-md: 1rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --border-radius-md: 8px;
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        body {
+            padding: var(--spacing-lg);
+            font-family: var(--font-family-sans);
+            background: var(--wa-color-neutral-95);
+            color: var(--wa-color-neutral-50);
+            font-size: var(--font-size-md);
+            line-height: 1.5;
+        }
+
+        .product-detail {
+            background-color: var(--wa-color-neutral-90);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .product-detail h1 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-sm);
+            color: var(--wa-color-brand-50);
+        }
+
+        .product-detail h3 {
+            font-size: var(--font-size-lg);
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .product-detail p {
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-size-md);
+        }
+
+        .product-detail ul {
+            margin-left: var(--spacing-sm);
+            margin-top: var(--spacing-xs);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--wa-color-brand-50);
+            color: var(--wa-color-neutral-0);
+            border-radius: var(--border-radius-md);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            background-color: var(--wa-color-brand-60);
+        }
+    </style>
+</head>
+<body>
+<div class="product-detail" th:if="${product}">
+    <h1 th:text="${product.title}">Product Title</h1>
+    <p><strong>Price:</strong> <span th:text="${product.price}">0.00</span></p>
+    <p><strong>Vendor:</strong> <span th:text="${product.vendor}">Vendor</span></p>
+    <p><strong>Handle:</strong> <span th:text="${product.handle}">handle</span></p>
+    <div th:utext="${product.body_html}">Body HTML</div>
+
+    <h3>Variants</h3>
+    <ul>
+        <li th:each="v : ${product.variants}"
+            th:text="${v.title + ' ' + v.option1 + ' ' + v.option2}">
+        </li>
+    </ul>
+</div>
+
+<div th:if="${product == null}">
+    <p>Product not found.</p>
+</div>
+
+<a href="/" class="back-link">Back to list</a>
+</body>
+</html>

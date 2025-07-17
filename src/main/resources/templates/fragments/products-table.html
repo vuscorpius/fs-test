@@ -1,6 +1,6 @@
 <th:block th:fragment="tableBody(products)">
     <tr th:each="p : ${products}">
-        <td th:text="${p.title}">Title</td>
+        <td><a th:href="@{/products/{id}(id=${p.id})}" th:text="${p.title}">Title</a></td>
         <td th:text="${p.price}">Price</td>
         <td th:text="${p.vendor}">Vendor</td>
         <td th:text="${p.handle}">Handle</td>
